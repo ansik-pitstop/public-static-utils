@@ -28,7 +28,8 @@
         () => {
           /* clipboard successfully set */
           // window.history.back();
-          window.close();
+          // window.close();
+          console.log('copied', text)
         },
         (err) => {
           /* clipboard write failed */
@@ -43,8 +44,7 @@
         alert('No text to copy to clipboard.');
         window.close();
       }
-      const queryOpts = { name: 'clipboard-write' };
-      const permissionStatus = await navigator.permissions.query(queryOpts);
+      const permissionStatus = await navigator.permissions.query({ name: 'clipboard-write' });
       // Will be 'granted', 'denied' or 'prompt':
       if (permissionStatus.state === 'denied') {
         handleClipboardPermissions();
