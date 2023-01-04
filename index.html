@@ -24,7 +24,7 @@
 
     function writeTextToClipboard(text) {
       // Copy the text to the clipboard using navigator
-      navigator.clipboard.writeText(text).then(
+      navigator.clipboard.writeText(String(text).trim()).then(
         () => {
           /* clipboard successfully set */
           // window.history.back();
