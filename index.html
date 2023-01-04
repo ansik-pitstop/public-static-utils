@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copy Text to Clipboard</title>
+</head>
+<body>
+
+  <script>
+    async function handleClipboardPermissions() {
+      try {
+        const permission = await navigator.permissions.query({ name: 'clipboard-write' });
+        if (permission.state === 'denied') {
+          throw new Error('Not allowed to write on clipboard. Please allow your brower to write on clipboard.');
+        }
+      }
+      catch (error) {
+        console.error(error)
+        alert(error.message);
+      }
+    }
+
+    function unsecuredCopyToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        console.error('Unable to copy to clipboard', err);
+        alert('Unable to copy to clipboard');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    /**
+     * Copies the text passed as param to the system clipboard
+     * Check if using HTTPS and navigator.clipboard is available
+     * Then uses standard clipboard API, otherwise uses fallback
+    */
+    function writeTextToClipboard(text) {
+      if (!text) {
+        alert('No text to copy to clipboard.');
+        window.close();
+      }
+      if (window.isSecureContext && navigator.clipboard) {
+        // Copy the text to the clipboard using navigator
+        navigator.clipboard.writeText(text).then(
+          () => {
+            /* clipboard successfully set */
+            // window.history.back();
+            window.close();
+          },
+          (err) => {
+            /* clipboard write failed */
+            console.error(err)
+            handleClipboardPermissions();
+          }
+        );
+      } else {
+        unsecuredCopyToClipboard(text);
+        // window.close();
+      }
+    }
+
+    // Get the text from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const text = urlParams.get('text');
+    writeTextToClipboard(text);
+  </script>
+</body>
+</html>
