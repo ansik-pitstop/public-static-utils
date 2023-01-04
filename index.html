@@ -28,7 +28,9 @@
         () => {
           /* clipboard successfully set */
           // window.history.back();
-          window.close();
+          setTimeout(() => {
+            window.close();
+          }, 1000);
         },
         (err) => {
           /* clipboard write failed */
